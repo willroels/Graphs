@@ -29,14 +29,7 @@ struct name {                       \
 #define GRAPH_EMPTY(graph)  \
     (GRAPH_ADJ_ARRAY(graph) == NULL)
 
-#define GRAPH_INIT(graph)              \
-do {                                   \
-    GRAPH_NUM_VERTICES(graph) = 0;     \
-    GRAPH_NUM_EDGES(graph) = 0;        \
-    GRAPH_ADJ_ARRAY(graph) = NULL;     \
-} while (0)
-
-#define GRAPH_INIT2()         {0}
+#define GRAPH_INIT()         {0}
 
 #define GRAPH_ALLOC(graph, type, nvertices)   \
 do {                                                                \
@@ -86,6 +79,44 @@ do {                                                        \
     if (GRAPH_ADJ_ARRAY(graph))                             \
         free(GRAPH_ADJ_ARRAY(graph));                       \
     GRAPH_ADJ_ARRAY(graph) = NULL;                          \
+} while (0)
+
+/* -- Union find algorithm stuff -- */
+
+struct ft_pair {
+    unsigned from, to;
+};
+
+#define FT_FROM(ft, field) ((ft)->field.from)
+#define FT_TO(ft, field) ((ft)->field.to)
+
+#define UFIND_INIT(ptr, nvertices)          \
+for (unsigned index_ = 0; index_ < (nvertices); index_++)       \
+    ptr[index_] = index_
+
+#define FIND_PARENT(ptr, vertex, root)                               \
+do {                                                                 \
+	for (root = vertex; (root) != ptr[root]; root = ptr[root]);     \
+} while (0)
+
+#define IS_CYCLE(ft_pairs, n_edges, size_elem, roots, n_vertices,accepted, is_cyle)     \
+do {                                                                           \
+    is_cycle = 0;                                                              \
+    struct ft_pair *ftptr = ft_pairs;                                          \
+    UFIND_INIT(roots, n_vertices);                                             \
+    for (unsigned i = 0; i < (accepted); i++){                                  \
+        unsigned a_, b_, root_a, root_b;                                       \
+        a_ = (ftptr)->from;                                                    \
+        b_ = (ftptr)->to;                                                      \
+        FIND_PARENT(roots, a_, root_a);                                        \
+        FIND_PARENT(roots, b_, root_b);                                        \
+        if (root_a == root_b) {                                                \
+            is_cycle = 1;                                                      \
+            break;                                                             \
+        }                                                                      \
+        roots[root_a] = root_b;                                                \
+        ftptr = (struct ft_pair *)(((char *)ftptr) + (size_elem));             \
+    }                                                                          \
 } while (0)
 
 #endif

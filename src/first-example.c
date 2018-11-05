@@ -15,7 +15,7 @@ typedef struct edge {
 typedef GRAPH(mygraph, Edge) Graph;
 
 int main(void){
-    Graph g = GRAPH_INIT2();
+    Graph g = GRAPH_INIT();
 
     // Allocate space for 5 pointers to adjacency lists
     GRAPH_ALLOC(&g, Edge, 5);   
