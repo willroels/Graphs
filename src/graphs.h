@@ -20,45 +20,45 @@ struct name {                       \
 #define GRAPH_NUM_VERTICES(graph)   \
     ((graph)->graph_n_vertices)
 
-#define GRAPH_NUM_EDGES(graph)   \
+#define GRAPH_NUM_EDGES(graph)      \
     ((graph)->graph_n_edges)
 
-#define GRAPH_ADJ_ARRAY(graph)  \
+#define GRAPH_ADJ_ARRAY(graph)      \
     ((graph)->graph_list_heads)
 
-#define GRAPH_EMPTY(graph)  \
+#define GRAPH_EMPTY(graph)          \
     (GRAPH_ADJ_ARRAY(graph) == NULL)
 
 #define GRAPH_INIT()         {0}
 
-#define GRAPH_ALLOC(graph, type, nvertices)   \
+#define GRAPH_ALLOC(graph, type, nvertices)                         \
 do {                                                                \
-    GRAPH_ADJ_ARRAY(graph) = calloc(nvertices, sizeof(type *));       \
+    GRAPH_ADJ_ARRAY(graph) = calloc(nvertices, sizeof(type *));     \
     if (!GRAPH_EMPTY(graph))                                        \
         GRAPH_NUM_VERTICES(graph) = nvertices;                      \
     else                                                            \
         perror("Could not allocate the adjacency list pointers");   \
 } while (0)
 
-#define GRAPH_FOREACH_VERTEX(itervar, graph)        \
-for (itervar = 0; (itervar) < GRAPH_NUM_VERTICES(graph); itervar++)
-
-#define ALIST_FIRST(graph, index) \
+#define ALIST_FIRST(graph, index)       \
     ((graph)->graph_list_heads[index])
 
-#define ALIST_NEXT(elem, field) \
+#define ALIST_NEXT(elem, field)         \
     ((elem)->field.next)
 
 #define ALIST_INDEX(edge, field)        \
     ((edge)->field.ind)
 
-#define ALIST_ADD_EDGE(graph, index, edge, field)     \
-do {        \
+#define ALIST_ADD_EDGE(graph, index, edge, field)               \
+do {                                                            \
     ALIST_NEXT(edge, field) = ALIST_FIRST(graph, index);        \
     ALIST_FIRST(graph, index) = edge;                           \
 } while (0)
 
-#define ALIST_FOREACH(temp, head, field)            \
+#define GRAPH_FOREACH_VERTEX(graph, itervar)                         \
+for (itervar = 0; (itervar) < GRAPH_NUM_VERTICES(graph); itervar++)
+
+#define ALIST_FOREACH(temp, head, field)                             \
 for ((temp) = (head); (temp); (temp) = ALIST_NEXT(temp, field))
 
 #define GRAPH_CLEANUP(graph, temp, field)                   \
@@ -100,11 +100,11 @@ do {                                                        \
 #define GRAPH_REMOVE(graph, vtex1, vtex2, dbl_indirect, field)      \
 do {                                                                \
     for (dbl_indirect = &ALIST_FIRST(graph, vtex1);                 \
-        *(dbl_indirect);                                           \
-        dbl_indirect = &(ALIST_NEXT(*(dbl_indirect), field))){     \
-        if (ALIST_INDEX(*(dbl_indirect), field) == vtex2) {        \
+        *(dbl_indirect);                                            \
+        dbl_indirect = &(ALIST_NEXT(*(dbl_indirect), field))){      \
+        if (ALIST_INDEX(*(dbl_indirect), field) == vtex2) {         \
             void *t_ = *dbl_indirect;                               \
-            *dbl_indirect = ALIST_NEXT(*(dbl_indirect), field);    \
+            *dbl_indirect = ALIST_NEXT(*(dbl_indirect), field);     \
             free(t_);                                               \
             break;                                                  \
         }                                                           \
@@ -114,8 +114,8 @@ do {                                                                \
 
 /* -- Graph property macros -- */
 
-#define GRAPH_DENSITY(graph) \
-((double) 2 * GRAPH_NUM_EDGES(graph))\
+#define GRAPH_DENSITY(graph)                                            \
+((double) 2 * GRAPH_NUM_EDGES(graph))                                   \
         /(GRAPH_NUM_VERTICES(graph) * (GRAPH_NUM_VERTICES(graph) - 1))
 
 /* -- Kruskal MST algorithm stuff -- */
@@ -128,12 +128,12 @@ struct ft_pair {
 #define FT_FROM(ft, field) ((ft)->field.from)
 #define FT_TO(ft, field) ((ft)->field.to)
 
-#define UFIND_INIT(ptr, nvertices)          \
+#define UFIND_INIT(ptr, nvertices)                              \
 for (unsigned index_ = 0; index_ < (nvertices); index_++)       \
     ptr[index_] = index_
 
-#define FIND_PARENT(ptr, vertex, root)                               \
-do {                                                                 \
+#define FIND_PARENT(ptr, vertex, root)                              \
+do {                                                                \
 	for (root = vertex; (root) != ptr[root]; root = ptr[root]);     \
 } while (0)
 
@@ -142,7 +142,7 @@ do {                                                                           \
     is_cycle = 0;                                                              \
     struct ft_pair *ftptr = ft_pairs;                                          \
     UFIND_INIT(roots, n_vertices);                                             \
-    for (unsigned i = 0; i < (accepted); i++){                                  \
+    for (unsigned i = 0; i < (accepted); i++){                                 \
         unsigned a_, b_, root_a, root_b;                                       \
         a_ = (ftptr)->from;                                                    \
         b_ = (ftptr)->to;                                                      \
