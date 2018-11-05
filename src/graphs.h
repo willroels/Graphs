@@ -97,19 +97,6 @@ do {                                                        \
                 break;                                      \
 } while(0)                                                    
 
-#define GRAPH_REMOVE_EDGE(graph, vtex1, vtex2, edge, field) \
-do {                                                        \
-    ALIST_FOREACH(edge, ALIST_FIRST(graph, vtex1), field) { \
-        if (ALIST_INDEX(ALIST_NEXT(edge, field), field) == vtex2) {  \
-            void *t_ = (void *)ALIST_NEXT(edge, field);              \
-            ALIST_NEXT(edge, field) =                                \
-                ALIST_NEXT(ALIST_NEXT(edge, field), field);          \
-            free(t_);                                                \
-            break;                                                   \
-        }                                                            \
-    }                                                                \
-} while (0)
-
 #define GRAPH_REMOVE(graph, vtex1, vtex2, dbl_indirect, field)      \
 do {                                                                \
     for (dbl_indirect = &ALIST_FIRST(graph, vtex1);                 \
@@ -124,6 +111,8 @@ do {                                                                \
     }                                                               \
     GRAPH_NUM_EDGES(graph)--;                                       \
 } while (0)
+
+/* -- Graph property macros -- */
 
 #define GRAPH_DENSITY(graph) \
 ((double) 2 * GRAPH_NUM_EDGES(graph))\
